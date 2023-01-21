@@ -1,17 +1,22 @@
+from aimbot import Aimbot
 from settings import *
 from target import Target
 import pygame, random
 
 class Countdown():
-    def __init__(self, seconds):
+    def __init__(self, aimbot_status, seconds):
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font(COUNTDOWN_FONT, 80)
         self.decrement_time = pygame.time.get_ticks()
+        self.aimbot_status = aimbot_status
         self.should_decrement = False
         self.time_left = int(seconds)
         self.initial_countdown_length = self.time_left
         self.target_group = pygame.sprite.Group()
         self.targets_spawned = 0
+
+        if self.aimbot_status:
+            self.aimbot = Aimbot()
 
     def cooldowns(self):
         curr_time = pygame.time.get_ticks()
@@ -50,3 +55,5 @@ class Countdown():
         self.cooldowns()
         self.draw_timer()
         self.spawn_target()
+        if self.aimbot_status:
+            self.aimbot.update()

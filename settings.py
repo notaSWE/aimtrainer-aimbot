@@ -5,6 +5,7 @@ WIDTH = 1920
 
 # Images
 BG_IMAGE_PATH = 'graphics/bg.png'
+DETECTION_IMAGE = 'graphics/detected.png'
 TARGET_IMAGE = 'graphics/target.png'
 
 # Text config (font from DaFont)

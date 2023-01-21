@@ -33,6 +33,8 @@ class PostGame():
             return 4
         elif basis > 14:
             return 5
+        else:
+            return 1
 
     def update(self):
         # Load background image and create text objects
