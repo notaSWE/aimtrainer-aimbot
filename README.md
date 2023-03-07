@@ -1,5 +1,5 @@
-# aimtrainer
-Simple Aim Trainer using Python/Pygame
+# aimtrainer-aimbot
+Simple Aim Trainer using Python/Pygame feat. Aimbot
 
 # Aimbot
 * Allows player to enable aimbot at start
