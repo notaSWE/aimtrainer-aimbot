@@ -15,11 +15,13 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE_STRING)
         self.clock = pygame.time.Clock()
-        self.click_count = 0
         self.game_state = "waiting"
 
         # Boolean to keep track of whether or not to use aimbot
         self.cheat = False
+
+        # Set self.click_count depending on whether or not aimbot is enabled
+        self.click_count = 0
 
         # Background image and shot sound
         self.bg_image = pygame.image.load(BG_IMAGE_PATH)
@@ -35,15 +37,19 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
                 elif event.type == pygame.KEYDOWN and self.game_state == "waiting":
                     if event.key == pygame.K_SPACE:
                         self.countdown = Countdown(self.cheat, 5)
                         self.game_state = "playing"
+
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.game_state == "waiting":
                     # Toggle aimbot
                     if event.button == 1:
                         self.cheat = not self.cheat
+                        self.click_count = -2
                         self.title.aimbot_enabled = not self.title.aimbot_enabled
+
                 elif event.type == pygame.KEYDOWN and self.game_state == "gameover":
                     # Reset the game state and clear click/target details
                     if event.key == pygame.K_SPACE:
@@ -52,15 +58,28 @@ class Game:
                         self.countdown.targets_spawned = 0
                         self.game_state = "waiting"
                         del self.countdown
+
                 elif event.type == pygame.MOUSEBUTTONUP and self.game_state == "playing" and not self.cheat:
                     self.click_count += 1
                     self.shot_sound.play()
                     self.countdown.target_group.update()
-                elif self.cheat and self.game_state == "playing" and pygame.mouse.get_pressed()[0]:
-                    self.click_count += 1
-                    self.shot_sound.play()
-                    self.countdown.target_group.update()
-                    self.countdown.aimbot.reset_detection()
+
+                elif self.cheat and self.game_state == "playing":
+                    # This works well but is "semi-automatic"
+                    #if event.type == pygame.MOUSEBUTTONUP:
+
+                    # Currently there is a bug here.  The initial click does not result in a hit, simply the jump to the target.
+                    # This impacts the first AND last clicks, and thus an off-by-two error.
+                    # Can be corrected by setting self.click_count to -2
+                    # Not a great solution because it means the manual version of aimbot above gives inaccurate results
+                    # However, a fine solution if you add an aimbot TYPE selector...
+                    # Aimbot (Manual) - self.click_count unchanged (0)
+                    # Aimbot (Super Turbo) - self.click_count = -2
+                    if pygame.mouse.get_pressed()[0]:
+                        self.click_count += 1
+                        self.shot_sound.play()
+                        self.countdown.target_group.update()
+                        self.countdown.aimbot.reset_detection()
 
             pygame.display.update()
             self.screen.blit(self.bg_image, (0, 0))

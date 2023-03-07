@@ -23,6 +23,9 @@ class PostGame():
         else:
             self.accuracy, self.final_score = 0, 0
 
+        # Print to console
+        print(f"{self.total_hits} / {self.total_clicks}")
+
     def get_new_multiplier(self, num_hits, num_misses):
         basis = num_hits - num_misses
         if basis > 3 and basis < 6:
